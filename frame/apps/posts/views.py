@@ -1,34 +1,19 @@
 import httpx
 from bs4 import BeautifulSoup
-from django import forms
-from django.forms import ModelForm
-from django.shortcuts import redirect, render
+from django.contrib import messages
+from django.shortcuts import (
+    get_object_or_404,
+    redirect,
+    render,
+)
 
+from .forms import PostCreateForm, PostEditForm
 from .models import Post
 
 
 def home_view(request):
     posts = Post.objects.all()
     return render(request, 'apps/posts/home.html', {'posts': posts})
-
-
-class PostCreateForm(ModelForm):
-    class Meta:
-        model = Post
-        fields = ['url', 'body']
-        labels = {
-            'body': 'Caption',
-        }
-        widgets = {
-            'body': forms.Textarea(
-                attrs={
-                    'rows': 3,
-                    'placeholder': 'Add a caption ...',
-                    'class': 'font1 text-4xl'
-                }
-            ),
-            'url': forms.TextInput(attrs={'placeholder': 'Add a url ...'}),
-        }
 
 
 def post_create_view(request):
@@ -58,3 +43,39 @@ def post_create_view(request):
             return redirect('home')
 
     return render(request, 'apps/posts/post_create.html', {'form': form})
+
+
+def post_delete_view(request, pk):
+    post = get_object_or_404(Post, id=pk)
+
+    if request.method == 'POST':
+        post.delete()
+        messages.success(request, 'Postagem deletada com sucesso')
+        return redirect('home')
+
+    return render(request, 'apps/posts/post_delete.html', {'post': post})
+
+
+def post_edit_view(request, pk):
+    post = get_object_or_404(Post, id=pk)
+    form = PostEditForm(instance=post)
+
+    if request.method == 'POST':
+        form = PostEditForm(request.POST, instance=post)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Postagem atualizada com sucesso')
+            return redirect('home')
+
+    context = {
+        'post': post,
+        'form': form
+    }
+
+    return render(request, 'apps/posts/post_edit.html', context)
+
+
+def post_page_view(request, pk):
+    post = get_object_or_404(Post, id=pk)
+    return render(request, 'apps/posts/post_page.html', {'post': post})
+
