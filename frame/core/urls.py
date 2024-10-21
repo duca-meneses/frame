@@ -21,7 +21,11 @@ from apps.posts.views import (
     post_edit_view,
     post_page_view,
 )
-from apps.users.views import profile_edit_view, profile_view
+from apps.users.views import (
+    profile_delete_view,
+    profile_edit_view,
+    profile_view,
+)
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -37,7 +41,9 @@ urlpatterns = [
     path('post/edit/<pk>/', post_edit_view, name='post-edit'),
     path('post/<pk>/', post_page_view, name='post'),
     path('profile/', profile_view, name='profile'),
+    path('<username>/', profile_view, name='userprofile'),
     path('profile/edit/', profile_edit_view, name='profile-edit'),
+    path('profile/delete/', profile_delete_view, name='profile-delete'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
