@@ -110,6 +110,12 @@
             align-items: center;
             margin-bottom: 1rem;
         }
+        form[action="/accounts/signup/"] ul {
+            @apply hidden
+        }
+        form[action="/accounts/signup/"] ul.errorlist {
+            @apply block
+        }
         label, input {
           display: inline-block;
         }
