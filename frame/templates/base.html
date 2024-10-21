@@ -107,8 +107,9 @@
         }
         form p {
             display: flex;
+            flex-wrap: wrap;
             align-items: center;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
         form[action="/accounts/signup/"] ul {
             @apply hidden
@@ -116,6 +117,21 @@
         form[action="/accounts/signup/"] ul.errorlist {
             @apply block
         }
+        form[action="/accounts/login/"] a {
+            @apply underline underline-offset-2
+        }
+        content a:hover {
+            @apply text-indigo-500
+        }
+        .helptext {
+            display: block;
+            margin-top: 0.5rem;
+        }
+
+        .helptext a {
+            color: lightslategray;
+        }
+        
         label, input {
           display: inline-block;
         }
@@ -133,8 +149,7 @@
             padding-left: 0;
         }
         label[for="id_remember"] {
-            width: auto;
-            margin-right: 0.5rem;
+            @apply inline-block w-auto mr-2
         }
         input[name="remember"] {
             width: auto;
