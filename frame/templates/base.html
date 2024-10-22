@@ -111,6 +111,9 @@
             align-items: center;
             margin-bottom: 0.5rem;
         }
+        form #id_body {
+            
+        }
         form[action="/accounts/signup/"] ul {
             @apply hidden
         }
@@ -119,6 +122,12 @@
         }
         form[action="/accounts/login/"] a {
             @apply underline underline-offset-2
+        }
+        form div {
+            @apply flex-grow
+        }
+        #id_body {
+            @apply w-full
         }
         content a:hover {
             @apply text-indigo-500
