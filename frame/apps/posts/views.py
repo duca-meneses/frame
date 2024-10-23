@@ -2,7 +2,6 @@ import httpx
 from bs4 import BeautifulSoup
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
 from django.shortcuts import (
     get_object_or_404,
     redirect,
@@ -119,6 +118,7 @@ def post_page_view(request, pk):
 @login_required
 def comment_sent(request, pk):
     post = get_object_or_404(Post, id=pk)
+    replyform = ReplyCreateForm()
 
     if request.method == 'POST':
         form = CommentCreateForm(request.POST)
@@ -128,7 +128,13 @@ def comment_sent(request, pk):
             comment.parent_post = post
             comment.save()
 
-    return redirect('post', post.id)
+    context = {
+        'post': post,
+        'comment': comment,
+        'replyform': replyform
+    }
+
+    return render(request, 'snippets/add_comment.html', context)
 
 
 @login_required
@@ -146,6 +152,7 @@ def comment_delete_view(request, pk):
 @login_required
 def reply_sent(request, pk):
     comment = get_object_or_404(Comment, id=pk)
+    replyform = ReplyCreateForm()
 
     if request.method == 'POST':
         form = ReplyCreateForm(request.POST)
@@ -155,7 +162,13 @@ def reply_sent(request, pk):
             reply.parent_comment = comment
             reply.save()
 
-    return redirect('post', comment.parent_post.id)
+    context = {
+        'comment': comment,
+        'reply': reply,
+        'replyform': replyform
+    }
+
+    return render(request, 'snippets/add_reply.html', context)
 
 
 @login_required
@@ -174,7 +187,8 @@ def like_toggle(model):
     def inner_func(func):
         def wrapper(request, *args, **kwargs):
             post = get_object_or_404(model, id=kwargs.get('pk'))
-            user_exist = post.likes.filter(username=request.user.username).exists()
+            user_exist = post.likes.filter(
+                username=request.user.username).exists()
 
             if post.author != request.user:
                 if user_exist:
