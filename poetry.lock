@@ -374,6 +374,21 @@ files = [
 ]
 
 [[package]]
+name = "django-htmx"
+version = "1.19.0"
+description = "Extensions for using Django with htmx."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "django_htmx-1.19.0-py3-none-any.whl", hash = "sha256:875a642814e52278c1728842436beda2001847a493ab79fd82da3fb46ead140f"},
+    {file = "django_htmx-1.19.0.tar.gz", hash = "sha256:e7e17304e78e07f96eca0affc3ce1806edfdf3538bb7cb1912452b101f3e627d"},
+]
+
+[package.dependencies]
+asgiref = ">=3.6"
+django = ">=3.2"
+
+[[package]]
 name = "h11"
 version = "0.14.0"
 description = "A pure-Python, bring-your-own-I/O implementation of HTTP/1.1"
@@ -784,4 +799,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "3.12.*"
-content-hash = "d6bb1512a440309f1f47d163a4a17e19755618af9e67cc1fef7ef15cf66553b4"
+content-hash = "60e6c3d3f5780914385a8c0e3739ff9558909d0b172529ea78ac68ea42b3d60e"
