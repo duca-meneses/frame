@@ -13,6 +13,9 @@ class Post(models.Model):
         User, on_delete=models.SET_NULL, null=True, related_name='posts'
     )
     body = models.TextField()
+    likes = models.ManyToManyField(
+        User, related_name='likedposts', through='LikedPost'
+    )
     tags = models.ManyToManyField('Tag')
     created_at = models.DateTimeField(auto_now_add=True)
     id = models.CharField(
@@ -28,6 +31,15 @@ class Post(models.Model):
 
     def __str__(self):
         return f'{self.title}'
+
+
+class LikedPost(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user.username} : {self.post.title}'
 
 
 class Tag(models.Model):

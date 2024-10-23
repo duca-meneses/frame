@@ -2,13 +2,19 @@ import httpx
 from bs4 import BeautifulSoup
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.shortcuts import (
     get_object_or_404,
     redirect,
     render,
 )
 
-from .forms import CommentCreateForm, PostCreateForm, PostEditForm, ReplyCreateForm
+from .forms import (
+    CommentCreateForm,
+    PostCreateForm,
+    PostEditForm,
+    ReplyCreateForm,
+)
 from .models import Comment, Post, Reply, Tag
 
 
@@ -162,3 +168,16 @@ def reply_delete_view(request, pk):
         return redirect('post', reply.parent_comment.parent_post.id)
 
     return render(request, 'apps/posts/reply_delete.html', {'reply': reply})
+
+
+def like_post(request, pk):
+    post = get_object_or_404(Post, id=pk)
+    user_exist = post.likes.filter(username=request.user.username).exists()
+
+    if post.author != request.user:
+        if user_exist:
+            post.likes.remove(request.user)
+        else:
+            post.likes.add(request.user)
+
+    return render(request, 'snippets/likes.html', {'post': post})
