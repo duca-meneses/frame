@@ -25,11 +25,8 @@ def home_view(request, tag=None):
     else:
         posts = Post.objects.all()
 
-    categories = Tag.objects.all()
-
     context = {
         'posts': posts,
-        'categories': categories,
         'tag': tag
     }
 
@@ -103,7 +100,6 @@ def post_edit_view(request, pk):
 
 def post_page_view(request, pk):
     post = get_object_or_404(Post, id=pk)
-
     commentform = CommentCreateForm()
     replyform = ReplyCreateForm()
 
@@ -120,7 +116,7 @@ def post_page_view(request, pk):
     context = {
         'post': post,
         'commentform': commentform,
-        'replyform': replyform
+        'replyform': replyform,
     }
 
     return render(request, 'apps/posts/post_page.html', context)
