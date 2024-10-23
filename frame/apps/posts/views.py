@@ -2,6 +2,7 @@ import httpx
 from bs4 import BeautifulSoup
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
 from django.shortcuts import (
     get_object_or_404,
     redirect,
@@ -105,6 +106,16 @@ def post_page_view(request, pk):
 
     commentform = CommentCreateForm()
     replyform = ReplyCreateForm()
+
+    if request.htmx:
+        if 'top' in request.GET:
+            # comments = post.comments.filter(likes__isnull=False).distinct()
+            comments = post.comments.annotate(
+                num_likes=Count('likes')).filter(num_likes__gt=0).order_by('-num_likes')
+        else:
+            comments = post.comments.all()
+        context = {'comments': comments, 'replyform': replyform}
+        return render(request, 'snippets/loop_post_comments.html', context)
 
     context = {
         'post': post,
