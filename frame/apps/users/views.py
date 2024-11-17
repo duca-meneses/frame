@@ -8,6 +8,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
+from ..inbox.forms import InboxNewMessageForm
 from .forms import ProfileForm
 
 
@@ -38,9 +39,12 @@ def profile_view(request, username=None):
         template = 'snippets/loop_profile_posts.html'
         return render(request, template, {'posts': posts})
 
+    new_message_form = InboxNewMessageForm()
+
     context = {
         'profile': profile,
-        'posts': posts
+        'posts': posts,
+        'new_message_form': new_message_form
     }
 
     return render(request, 'apps/users/profile.html', context)
